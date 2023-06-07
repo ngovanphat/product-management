@@ -1,7 +1,7 @@
-export default function Dashboard() {
+export default function ProductList() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      Thống kê hàng hóa
+      Danh sách hàng hóa
     </main>
   );
 }
