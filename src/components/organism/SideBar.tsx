@@ -25,7 +25,7 @@ const SideBar = ({ open, navItems = defaultNavItems, setOpen }: Props) => {
     <div
       className={classNames({
         "flex flex-col justify-between": true,
-        "bg-indigo-700 text-zinc-50": true,
+        "bg-blue-500 text-zinc-50": true,
         "md:w-full md:sticky md:top-16 md:z-0 top-0 fixed z-20": true,
         "md:h-[calc(100vh_-_64px)] h-full w-[300px]": true,
         "transition-transform .3s ease-in-out md:translate-x-0": true,
@@ -33,7 +33,7 @@ const SideBar = ({ open, navItems = defaultNavItems, setOpen }: Props) => {
       })}
       ref={ref}
     >
-      <nav className="md:sticky top-0 md:top-16 py-10">
+      <nav className="md:sticky top-0 md:top-16 py-5">
         {/**Nav items */}
         <ul className="py-2 flex flex-col gap-2">
           {navItems.map((item, index) => (
