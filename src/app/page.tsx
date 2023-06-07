@@ -101,7 +101,7 @@ export default function Dashboard() {
         datasets: [
           {
             label: "Lợi nhuận theo ngày",
-            data: [10, 12, 5, 17, 8, 2, 4],
+            data: [10, 12, 5, 17, 8],
             fill: false,
             borderColor: "#818CF8",
             backgroundColor: "#818CF8",
@@ -144,6 +144,8 @@ export default function Dashboard() {
 
       <div className="w-full mt-8">
         <p className="text-slate-400 mb-2 font-bold">Lợi nhuận</p>
+        <p className="text-stone-950 my-2 font-bold text-2xl">$27,003.98</p>
+
         <div className="w-full max-h-80">
           <canvas id="line-chart"></canvas>
         </div>
