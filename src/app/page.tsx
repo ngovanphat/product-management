@@ -39,7 +39,10 @@ export default function Dashboard() {
   ];
   useEffect(() => {
     Chart.register(...registerables);
-    let config = {
+    let context = (
+      document.getElementById("bar-chart") as HTMLCanvasElement
+    ).getContext("2d");
+    const bar = new Chart(context!, {
       type: "bar",
       data: {
         labels: ["CN", "T2", "T3", "T4", "T5", "T6", "T7"],
@@ -49,7 +52,6 @@ export default function Dashboard() {
             backgroundColor: "#60A5FA",
             borderColor: "#60A5FA",
             data: [12, 22, 11, 13, 14, 5, 13],
-            fill: false,
             barThickness: 8,
           },
           {
@@ -57,7 +59,6 @@ export default function Dashboard() {
             backgroundColor: "#818CF8",
             borderColor: "#818CF8",
             data: [13, 14, 5, 13, 12, 22, 11],
-            fill: false,
             barThickness: 8,
           },
         ],
@@ -65,31 +66,12 @@ export default function Dashboard() {
       options: {
         maintainAspectRatio: false,
         responsive: true,
-        title: {
-          display: false,
-          text: "Orders chart",
-        },
-        tooltips: {
-          mode: "index",
-          intersect: false,
-        },
         hover: {
           mode: "nearest",
           intersect: false,
         },
-        legend: {
-          labels: {
-            fontColor: "rgba(0,0,0,.4)",
-          },
-          align: "end",
-          position: "bottom",
-        },
       },
-    };
-    let context = (
-      document.getElementById("bar-chart") as HTMLCanvasElement
-    ).getContext("2d");
-    const bar = new Chart(context!, config);
+    });
 
     let lineChartContext = (
       document.getElementById("line-chart") as HTMLCanvasElement
