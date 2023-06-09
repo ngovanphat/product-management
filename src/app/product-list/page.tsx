@@ -2,60 +2,38 @@
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { ChipIncrease } from "./IncreaseChip";
-import { ProductItem } from "./ProductItem";
+import { Product, ProductItem } from "./ProductItem";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getData } from "@/firebase/firestore/getData";
+import { doc } from "firebase/firestore";
 
 export default function ProductList() {
   const router = useRouter();
-  const products = [
-    {
-      id: 1,
-      productName: "Thịt heo",
-      price: 70000,
-      quantity: 20,
-      imageUrl:
-        "https://icdn.dantri.com.vn/FaA3gEccccccccccccos/Image/2011/06/tht6811_a9082.jpg",
-    },
-    {
-      id: 2,
-      productName: "Thịt bò",
-      price: 250000,
-      quantity: 2,
-      imageUrl:
-        "https://thitbohuunghi.com/wp-content/uploads/2021/06/6gt5cdi_-_imgur_grande.png",
-    },
-    {
-      id: 3,
-      productName: "Thịt gà",
-      price: 50000,
-      quantity: 10,
-      imageUrl:
-        "https://vinafood.vn/wp-content/uploads/2022/05/ga-dong-lanh.jpg",
-    },
-    {
-      id: 4,
-      productName: "Cải xà lách",
-      price: 10000,
-      quantity: 50,
-      imageUrl:
-        "https://vinmec-prod.s3.amazonaws.com/images/20210106_041321_793265_hat-giong-rau-xa-la.max-1800x1800.jpg",
-    },
-    {
-      id: 5,
-      productName: "Bắp chuối",
-      price: 130000,
-      quantity: 40,
-      imageUrl: "https://cdn.tgdd.vn/2021/05/CookProduct/2-1200x676-9.jpg",
-    },
-    {
-      id: 6,
-      productName: "Cà chua",
-      price: 13000,
-      quantity: 30,
-      imageUrl:
-        "https://cdn.tgdd.vn/Files/2017/10/30/1037058/9-cong-dung-va-han-che-cua-ca-chua-doi-voi-cuoc-song-hang-ngay-202103142026330054.jpg",
-    },
-  ];
+  const [products, setProducts] = useState([] as Product[]);
+  const [loadingError, setLoadingError] = useState(false);
+
+  useEffect(() => {
+    getData("product").then((val) => {
+      const { result, error } = val;
+      if (error) setLoadingError(true);
+      else {
+        const items = [] as Product[];
+        result?.forEach((item) => {
+          const { id, productName, quantity, price, imageUrl } = item.data();
+          const element = new Product(
+            id,
+            imageUrl,
+            productName,
+            price,
+            quantity
+          );
+          items.push(element);
+        });
+        setProducts(items);
+      }
+    });
+  }, []);
 
   function navigateToAddProduct() {
     router.push("/product-list/create");

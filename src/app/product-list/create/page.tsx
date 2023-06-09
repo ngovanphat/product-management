@@ -33,7 +33,7 @@ export default function CreateProductPage() {
         imageUrl: uploadResult,
       };
 
-      const { result, error } = await addData("product", id, data);
+      const { error } = await addData("product", id, data);
 
       if (error) {
         throw error;

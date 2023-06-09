@@ -2,20 +2,55 @@ import Image from "next/image";
 
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
-type ProductItemProps = {
-  id: number;
+export class Product {
+  id: string;
   imageUrl: string;
   productName: string;
   price: number;
   quantity: number;
+
+  constructor(
+    id: string,
+    imageUrl: string,
+    productName: string,
+    price: number,
+    quantity: number
+  ) {
+    this.id = id;
+    this.imageUrl = imageUrl;
+    this.productName = productName;
+    this.price = Number(price);
+    this.quantity = Number(quantity);
+  }
+
+  toString() {
+    return this.productName + ", " + this.price + ", " + this.quantity;
+  }
+}
+
+export const productConverter = {
+  toFirestore: (product: Product) => {
+    return product;
+  },
+  fromFirestore: (snapshot: any, options: any) => {
+    const data = snapshot.data(options);
+    return new Product(
+      data.id,
+      data.imageUrl,
+      data.productName,
+      data.price,
+      data.quantity
+    );
+  },
 };
+
 export function ProductItem({
   id,
   imageUrl,
   productName,
   price,
   quantity,
-}: ProductItemProps) {
+}: Product) {
   return (
     <div className="flex items-center">
       <div className="bg-slate-300 rounded-full max-w-max max-h-max p-2 flex items-center justify-center">
