@@ -1,8 +1,8 @@
 "use client";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { ChipIncrease } from "./IncreaseChip";
-import { Product, ProductItem } from "./ProductItem";
+import { ChipIncrease } from "../../components/organism/IncreaseChip";
+import { Product, ProductItem } from "../../components/organism/ProductItem";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getData } from "@/firebase/firestore/getData";

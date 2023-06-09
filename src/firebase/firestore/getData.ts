@@ -1,4 +1,4 @@
-import { Product, productConverter } from "@/app/product-list/ProductItem";
+import { Product, productConverter } from "@/components/organism/ProductItem";
 import firebase_app from "../config";
 import {
   getFirestore,
