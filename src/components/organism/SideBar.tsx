@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import classNames from "classnames";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { useOnClickOutside } from "usehooks-ts";
 import Link from "next/link";
 import { defaultNavItems } from "./defaultNavItems";
@@ -33,7 +34,18 @@ const SideBar = ({ open, navItems = defaultNavItems, setOpen }: Props) => {
       })}
       ref={ref}
     >
-      <nav className="md:sticky top-0 md:top-16 py-5">
+      <nav className="md:sticky top-0 md:top-16 py-3">
+        <Link href="/create-order">
+          <button
+            className="rounded-full bg-black mx-3 py-3 flex items-center justify-center"
+            style={{
+              width: "calc(100% - 20px)",
+            }}
+          >
+            <PlusIcon className="w-6 h-6 mr-3" />
+            Tạo đơn hàng
+          </button>
+        </Link>
         {/**Nav items */}
         <ul className="py-2 flex flex-col gap-2">
           {navItems.map((item, index) => (

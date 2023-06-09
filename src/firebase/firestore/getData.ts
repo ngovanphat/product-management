@@ -1,13 +1,5 @@
-import { Product, productConverter } from "@/components/organism/ProductItem";
 import firebase_app from "../config";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-} from "firebase/firestore";
-import addData from "./addData";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 const db = getFirestore(firebase_app);
 
