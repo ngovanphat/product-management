@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import { formatVNDCurrency } from "@/utils";
 
 export class Product {
   id: string;
@@ -8,19 +9,22 @@ export class Product {
   productName: string;
   price: number;
   quantity: number;
+  unit: Array<string>;
 
   constructor(
-    id: string,
-    imageUrl: string,
-    productName: string,
-    price: number,
-    quantity: number
+    id: string = "",
+    imageUrl: string = "",
+    productName: string = "",
+    price: number = 0,
+    quantity: number = 0,
+    unit: Array<string> = ["kg"]
   ) {
     this.id = id;
     this.imageUrl = imageUrl;
     this.productName = productName;
     this.price = Number(price);
     this.quantity = Number(quantity);
+    this.unit = unit;
   }
 
   toString() {
@@ -32,8 +36,8 @@ export const productConverter = {
   toFirestore: (product: Product) => {
     return product;
   },
-  fromFirestore: (snapshot: any, options: any) => {
-    const data = snapshot.data(options);
+  fromFirestore: (snapshot: any) => {
+    const data = snapshot.data();
     return new Product(
       data.id,
       data.imageUrl,
@@ -69,13 +73,7 @@ export function ProductItem({
       <div className="flex flex-col ml-5 w-1/2">
         <p className="text-2xl font-semibold text-black">{productName}</p>
         <div className="flex text-black justify-between gap-2">
-          <p>
-            Giá:{" "}
-            {price.toLocaleString("vi-VN", {
-              style: "currency",
-              currency: "VND",
-            })}
-          </p>
+          <p>Giá: {formatVNDCurrency(price)}</p>
           <p>Số lượng: {quantity}</p>
         </div>
       </div>

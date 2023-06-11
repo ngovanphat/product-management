@@ -35,7 +35,11 @@ const SideBar = ({ open, navItems = defaultNavItems, setOpen }: Props) => {
       ref={ref}
     >
       <nav className="md:sticky top-0 md:top-16 py-3">
-        <Link href="/create-order">
+        <Link
+          href="/create-order"
+          prefetch={false}
+          onClick={() => setOpen(false)}
+        >
           <button
             className="rounded-full bg-black mx-3 py-3 flex items-center justify-center"
             style={{
@@ -49,7 +53,12 @@ const SideBar = ({ open, navItems = defaultNavItems, setOpen }: Props) => {
         {/**Nav items */}
         <ul className="py-2 flex flex-col gap-2">
           {navItems.map((item, index) => (
-            <Link key={index} href={item.href} onClick={() => setOpen(false)}>
+            <Link
+              key={index}
+              href={item.href}
+              onClick={() => setOpen(false)}
+              prefetch={false}
+            >
               <li
                 className={classNames({
                   "text-indigo-100 hover:bg-indigo-900": true,
