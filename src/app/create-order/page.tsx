@@ -1,6 +1,6 @@
 "use client";
 import { Product, productConverter } from "@/components/organism/ProductItem";
-import { getData } from "@/firebase/firestore/getData";
+import { getData, getDataRecord } from "@/firebase/firestore/getData";
 import {
   ChevronDownIcon,
   PlusIcon,
@@ -34,28 +34,66 @@ export default function CreateOrder() {
     });
   }, []);
 
+  function initOrder() {
+    const order = {
+      itemList: [] as Array<Product>,
+      totalAmount: totalAmount,
+      createdAt: moment().format("DD-MM-YYYY"),
+    };
+
+    const itemList = [] as Array<Product>;
+
+    selectedProducts.forEach((item) => {
+      const idx = itemList.findIndex((e) => e.id === item.id);
+
+      if (idx !== -1) {
+        itemList[idx].quantity += item.quantity;
+      } else itemList.push(item);
+    });
+
+    order.itemList = itemList;
+    return order;
+  }
+  function loadNewDataToSavedOrder(savedOrder: {
+    itemList: Array<Product>;
+    totalAmount: number;
+    createdAt: string;
+  }) {
+    selectedProducts.forEach((item) => {
+      const idx = savedOrder.itemList.findIndex((e) => e.id === item.id);
+
+      if (idx !== -1) {
+        savedOrder.itemList[idx].quantity += item.quantity;
+      } else savedOrder.itemList.push(item);
+    });
+
+    savedOrder.totalAmount = calculateTotalAmount(savedOrder.itemList);
+
+    return savedOrder;
+  }
+
+  async function getSavedOrder(date: string) {
+    const savedOrder = await getDataRecord(`histories`, date);
+    return savedOrder;
+  }
+
   async function submitOrder() {
     try {
       setLoading(true);
+      const today = moment().format("DD-MM-YYYY");
+      const { result: savedOrder, error: errorLoadSavedData } =
+        await getSavedOrder(today);
+      if (errorLoadSavedData) throw errorLoadSavedData;
 
-      const order = {
-        itemList: [] as Array<Product>,
-        totalAmount: totalAmount,
-        createdAt: moment().format("DD-MM-YYYY"),
-      };
+      let order = null;
+      if (savedOrder?.exists()) {
+        order = savedOrder.data();
+        order = loadNewDataToSavedOrder(order as any);
+      } else {
+        order = initOrder();
+      }
 
-      const itemList = [] as Array<Product>;
-
-      selectedProducts.forEach((item) => {
-        const idx = itemList.findIndex((e) => e.id === item.id);
-
-        if (idx !== -1) {
-          itemList[idx].quantity += item.quantity;
-        } else itemList.push(item);
-      });
-
-      order.itemList = itemList;
-      const { error } = await addData("histories", order.createdAt, order);
+      const { error } = await addData("histories", today, order);
 
       if (error) {
         throw error;
