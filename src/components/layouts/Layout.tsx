@@ -7,7 +7,7 @@ import SideBar from "../organism/SideBar";
 const Layout = (props: PropsWithChildren) => {
   const [showSideBar, setShowSideBar] = useState(false);
   return (
-    <div className="grid min-h-screen grid-rows-header bg-black">
+    <div className="grid min-h-screen grid-rows-header bg-black w-full">
       <div className="bg-white shadow-sm z-10">
         <NavBar
           isOpenSideBar={showSideBar}
