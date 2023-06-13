@@ -1,5 +1,5 @@
 import { Product } from "@/components/organism/ProductItem";
-import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ChevronDownIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 type AddItemContainerProps = {
   index: number;
@@ -8,6 +8,7 @@ type AddItemContainerProps = {
 
   handleSelectProduct(index: number, value: string): void;
   updateProductField(index: number, value: string, name: string): void;
+  onRemove(index: number): void;
 };
 export function AddItemContainer({
   index,
@@ -15,9 +16,13 @@ export function AddItemContainer({
   selectedProduct,
   handleSelectProduct,
   updateProductField,
+  onRemove,
 }: AddItemContainerProps) {
   return (
-    <div className="bg-indigo-200 w-full rounded-lg p-3 mt-3">
+    <div className="bg-indigo-200 w-full rounded-lg p-3 mt-3 relative">
+      <div className="absolute top-3 right-3" onClick={() => onRemove(index)}>
+        <XMarkIcon className="w-5 h-5" />
+      </div>
       {/* select product field */}
       <label
         htmlFor="product"
