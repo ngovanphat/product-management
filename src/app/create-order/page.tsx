@@ -102,7 +102,7 @@ export default function CreateOrder() {
       setLoading(false);
       router.back();
     } catch (e) {
-      alert(e);
+      alert("Đã có lỗi xảy ra! Vui lòng thử lại!");
     } finally {
       setLoading(false);
     }
@@ -134,7 +134,7 @@ export default function CreateOrder() {
     const newSelectedProducts = [...selectedProducts];
     newSelectedProducts[index] = {
       ...product,
-      quantity: 0,
+      quantity: 1,
     };
     setSelectedProducts(newSelectedProducts);
   }

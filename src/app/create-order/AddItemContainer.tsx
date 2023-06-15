@@ -39,7 +39,7 @@ export function AddItemContainer({
           <option value="">Chọn 1 sản phẩm</option>
           {productOptions.map((product) => (
             <option key={product.id} value={product.id}>
-              {product.productName}
+              {product.productName} {product.unit}
             </option>
           ))}
         </select>
