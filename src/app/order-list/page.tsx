@@ -36,8 +36,8 @@ export default function OrderList() {
         href="/create-order"
         className="flex rounded-full bg-blue-500 mt-5 w-full justify-center items-center py-2"
       >
-        <PlusIcon className="w-7 h-7 mr-2" color="white" />
-        <p className="font-medium text-white text-xl">Thêm đơn hàng</p>
+        <PlusIcon className="w-5 h-5 mr-2" color="white" />
+        <p className="font-medium text-white text-lg">Thêm đơn hàng</p>
       </Link>
 
       <div className="w-full">
@@ -48,7 +48,7 @@ export default function OrderList() {
               key={index}
             >
               <div className="py-3">
-                <div className="flex rounded-lg drop-shadow-2xl bg-blue-200  text-black p-4 items-center  justify-between">
+                <div className="flex rounded-lg bg-blue-200  text-black p-4 items-center  justify-between">
                   <div>
                     <p className="font-semibold text-lg">{item.createdAt}</p>
                     <p className="font-medium text-md">
