@@ -19,7 +19,7 @@ export default function ProductList() {
     getData("product").then((val) => {
       const { result, error } = val;
       if (error) {
-        alert("Thêm sản phẩm thất bại");
+        alert("Tải sản phẩm thất bại");
       } else {
         const items = [] as Product[];
         result?.forEach((item) => {
