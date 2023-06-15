@@ -67,19 +67,10 @@ export function AddItemContainer({
           }
         />
 
-        <div className="relative w-28">
-          <select
-            id="unit"
-            className="bg-white-50 border border-gray-300 text-gray-900 text-md font-semibold rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5  w-full appearance-none"
-            defaultValue="kg"
-          >
-            {selectedProduct.unit.map((unit, index) => (
-              <option key={index} value={unit}>
-                {unit}
-              </option>
-            ))}
-          </select>
-          <ChevronDownIcon className="absolute bottom-3 right-3 w-5 h-5" />
+        <div className="w-28 flex justify-center">
+          <p className="text-lg font-medium text-black">
+            {selectedProduct.unit}
+          </p>
         </div>
       </div>
       {/* input amount of money */}
