@@ -3,20 +3,8 @@ import { PlusIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { getData } from "@/firebase/firestore/getData";
-import { Product } from "@/components/organism/ProductItem";
 import { formatVNDCurrency } from "@/utils";
-
-export class Order {
-  createdAt: string;
-  itemList: Array<Product>;
-  totalAmount: number;
-
-  constructor(createdAt = "", itemList = [], totalAmount = 0) {
-    this.createdAt = createdAt;
-    this.itemList = itemList;
-    this.totalAmount = totalAmount;
-  }
-}
+import { Order } from "./Order";
 
 export default function OrderList() {
   const [orders, setOrders] = useState([] as Order[]);
