@@ -1,13 +1,9 @@
 "use client";
 import { Product, productConverter } from "@/components/organism/ProductItem";
 import { getData, getDataRecord } from "@/firebase/firestore/getData";
-import {
-  ChevronDownIcon,
-  PlusIcon,
-  DocumentPlusIcon,
-} from "@heroicons/react/24/outline";
+import { PlusIcon, DocumentPlusIcon } from "@heroicons/react/24/outline";
 import { formatVNDCurrency } from "@/utils";
-import moment from "moment";
+import moment, { duration } from "moment";
 import { useEffect, useMemo, useState } from "react";
 import { AddItemContainer } from "./AddItemContainer";
 import addData from "@/firebase/firestore/addData";
@@ -34,11 +30,11 @@ export default function CreateOrder() {
     });
   }, []);
 
-  function initOrder() {
+  function initOrder(timestamp: number) {
     const order = {
       itemList: [] as Array<Product>,
       totalAmount: totalAmount,
-      createdAt: moment().format("DD-MM-YYYY"),
+      createdAt: timestamp,
     };
 
     const itemList = [] as Array<Product>;
@@ -57,7 +53,7 @@ export default function CreateOrder() {
   function loadNewDataToSavedOrder(savedOrder: {
     itemList: Array<Product>;
     totalAmount: number;
-    createdAt: string;
+    createdAt: number;
   }) {
     selectedProducts.forEach((item) => {
       const idx = savedOrder.itemList.findIndex((e) => e.id === item.id);
@@ -90,7 +86,7 @@ export default function CreateOrder() {
         order = savedOrder.data();
         order = loadNewDataToSavedOrder(order as any);
       } else {
-        order = initOrder();
+        order = initOrder(new Date().getTime());
       }
 
       const { error } = await addData("histories", today, order);
@@ -98,16 +94,49 @@ export default function CreateOrder() {
       if (error) {
         throw error;
       }
-
       setLoading(false);
       router.back();
     } catch (e) {
+      console.log(e);
       alert("Đã có lỗi xảy ra! Vui lòng thử lại!");
     } finally {
       setLoading(false);
     }
   }
 
+  // async function submitOrder() {
+  //   try {
+  //     setLoading(true);
+  //     for (let i = 0; i < 10; i++) {
+  //       const today = moment().add(i, "day").format("DD-MM-YYYY");
+  //       const { result: savedOrder, error: errorLoadSavedData } =
+  //         await getSavedOrder(today);
+  //       if (errorLoadSavedData) throw errorLoadSavedData;
+
+  //       let order = null;
+  //       if (savedOrder?.exists()) {
+  //         order = savedOrder.data();
+  //         order = loadNewDataToSavedOrder(order as any);
+  //       } else {
+  //         order = initOrder(new Date().getTime() + i);
+  //       }
+
+  //       const { error } = await addData("histories", today, order);
+
+  //       if (error) {
+  //         throw error;
+  //       }
+  //     }
+
+  //     setLoading(false);
+  //     router.back();
+  //   } catch (e) {
+  //     console.log(e);
+  //     alert("Đã có lỗi xảy ra! Vui lòng thử lại!");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
   function calculateTotalAmount(items: Array<Product>): number {
     const values = items.map((item) => item.price * item.quantity);
     const sumValue = values.reduce((a, b) => a + b, 0);

@@ -18,7 +18,8 @@ export default function OrderList() {
         const items = [] as Order[];
         result?.forEach((item) => {
           const { createdAt, itemList, totalAmount } = item.data();
-          const element = new Order(createdAt, itemList, totalAmount);
+          const id = item.id;
+          const element = new Order(id, createdAt, itemList, totalAmount);
           items.push(element);
         });
         setOrders(items);
@@ -44,13 +45,13 @@ export default function OrderList() {
         <div className="mt-5">
           {orders.map((item, index) => (
             <Link
-              href={`/order-list/${encodeURIComponent(item.createdAt)}`}
+              href={`/order-list/${encodeURIComponent(item.id)}`}
               key={index}
             >
               <div className="py-3">
                 <div className="flex rounded-lg bg-blue-200  text-black p-4 items-center  justify-between">
                   <div>
-                    <p className="font-semibold text-lg">{item.createdAt}</p>
+                    <p className="font-semibold text-lg">{item.id}</p>
                     <p className="font-medium text-md">
                       Số tiền: {formatVNDCurrency(item.totalAmount)}
                     </p>

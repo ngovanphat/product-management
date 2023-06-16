@@ -1,44 +1,62 @@
 "use client";
-
-import { MinusCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
-import classNames from "classnames";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { Chart, registerables } from "chart.js";
-import { useEffect } from "react";
 
-type StatisticTimeFilter = {
-  label: string;
-  isSelected: boolean;
-};
+import { Order } from "./order-list/Order";
+import { getData } from "@/firebase/firestore/getData";
+import { formatVNDCurrency } from "@/utils";
+import moment from "moment";
 
 export default function Dashboard() {
-  const filterStaticTimes: StatisticTimeFilter[] = [
-    {
-      label: "1D",
-      isSelected: true,
-    },
-    {
-      label: "1W",
-      isSelected: false,
-    },
-    {
-      label: "1M",
-      isSelected: false,
-    },
-    {
-      label: "3M",
-      isSelected: false,
-    },
-    {
-      label: "6M",
-      isSelected: false,
-    },
-    {
-      label: "1Y",
-      isSelected: false,
-    },
-  ];
-  useEffect(() => {
+  const [orders, setOrders] = useState<Array<Order>>([]);
+  const [error, setError] = useState();
+
+  const revenue = useMemo(
+    () => orders.reduce((a, b) => a + b.totalAmount, 0),
+    [orders]
+  );
+  useLayoutEffect(() => {
     Chart.register(...registerables);
+
+    getData("histories").then((value) => {
+      const { error, result } = value;
+      if (error) setError(error as any);
+      const orderList = [] as Array<Order>;
+      result?.forEach((item) => {
+        const { createdAt, itemList, totalAmount } = item.data();
+        const id = item.id;
+        const order = new Order(id, createdAt, itemList, totalAmount);
+        orderList.push(order);
+      });
+      orderList.sort((a, b) => a.createdAt - b.createdAt);
+      setOrders(orderList);
+    });
+    drawBarChart();
+    drawLineChart();
+  }, [error]);
+
+  function drawLineChart() {
+    let lineChartContext = (
+      document.getElementById("line-chart") as HTMLCanvasElement
+    ).getContext("2d");
+    new Chart(lineChartContext!, {
+      type: "line",
+      data: {
+        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        datasets: [
+          {
+            label: "Doanh thu theo ngày",
+            data: [10, 12, 5, 17, 8],
+            fill: false,
+            borderColor: "#818CF8",
+            backgroundColor: "#818CF8",
+            tension: 0.1,
+          },
+        ],
+      },
+    });
+  }
+  function drawBarChart() {
     let context = (
       document.getElementById("bar-chart") as HTMLCanvasElement
     ).getContext("2d");
@@ -72,61 +90,17 @@ export default function Dashboard() {
         },
       },
     });
+  }
 
-    let lineChartContext = (
-      document.getElementById("line-chart") as HTMLCanvasElement
-    ).getContext("2d");
-    const lineChart = new Chart(lineChartContext!, {
-      type: "line",
-      data: {
-        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-        datasets: [
-          {
-            label: "Lợi nhuận theo ngày",
-            data: [10, 12, 5, 17, 8],
-            fill: false,
-            borderColor: "#818CF8",
-            backgroundColor: "#818CF8",
-            tension: 0.1,
-          },
-        ],
-      },
-    });
-  }, []);
   return (
     <main className="flex min-h-screen flex-col items-center px-4 bg-white">
-      <div className="flex justify-between gap-4 w-full ">
-        <div className="rounded-xl w-1/2 bg-blue-400 p-5 mt-2.5">
-          <PlusCircleIcon className="w-6 h-6" />
-          <p className="text-lg pt-1">3027</p>
-          <p className="text-slate-300 text-xs">Sản phẩm nhập vào</p>
-        </div>
-
-        <div className="rounded-xl w-1/2 bg-indigo-400 p-5 mt-2.5">
-          <MinusCircleIcon className="w-6 h-6" />
-          <p className="text-lg pt-1">3027</p>
-          <p className="text-slate-300 text-xs">Sản phẩm bán ra</p>
-        </div>
-      </div>
-
-      {/* <div className="flex justify-between w-full px-2 pt-4 text-black">
-        {filterStaticTimes.map((time, index) => (
-          <div
-            key={index}
-            className={classNames({
-              "rounded-full px-3 py-1": true,
-              "bg-blue-400 text-white": time.isSelected,
-              "font-medium": !time.isSelected,
-            })}
-          >
-            {time.label}
-          </div>
-        ))}
-      </div> */}
+      <p className="text-black text-xl font-bold mt-3 w-full">Tổng quan</p>
 
       <div className="w-full mt-8">
-        <p className="text-slate-400 mb-2 font-bold">Lợi nhuận</p>
-        <p className="text-stone-950 my-2 font-bold text-2xl">$27,003.98</p>
+        <p className="text-slate-400 mb-2 font-bold">Doanh thu</p>
+        <p className="text-stone-950 my-2 font-bold text-2xl">
+          {formatVNDCurrency(revenue)}
+        </p>
 
         <div className="w-full max-h-80">
           <canvas id="line-chart"></canvas>
